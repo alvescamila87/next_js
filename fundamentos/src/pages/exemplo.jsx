@@ -1,10 +1,11 @@
 import Cabecalho from "../components/Cabecalho";
+import Layout from "../components/Layout";
 
 export default function Exemplo(){
     return(
-        <>
-            <Cabecalho titulo="Next.js" />
+        <Layout titulo="Usando componentes">
+            <Cabecalho titulo="Next.js & React" />
             <Cabecalho titulo="Java + Spring" />
-        </>
+        </Layout>           
     )
 }
