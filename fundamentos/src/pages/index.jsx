@@ -15,6 +15,8 @@ export default function Inicio(){
       <Navegador textoDoLink="Exemplo" destino="/exemplo" cor="#8a2be2"/>
       <Navegador textoDoLink="JSX" destino="/jsx" cor="crimson"/>
       <Navegador textoDoLink="Navegação #01" destino="/navegacao" cor="green"/>
+      <Navegador textoDoLink="Navegação #02" destino="/cliente/saopaulo-113/123" cor="blue"/>
+      <Navegador textoDoLink="Navegação #03 - Componente com estado" destino="/estado" cor="pink"/>
     </div>
   )
 }
