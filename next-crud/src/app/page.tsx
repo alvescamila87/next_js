@@ -5,7 +5,7 @@ export default function Home() {
       bg-gradient-to-r from-blue-500 to-purple-500
       text-white
     `}>
-      <h1>App</h1> 
-    </div>
+    App
+    </div>    
   );
 }
