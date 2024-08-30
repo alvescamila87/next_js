@@ -8,6 +8,12 @@ import { useState } from "react";
 
 export default function Home() {
 
+  // criar estados para armazenar cliente
+  const [cliente, setCliente] = useState(Cliente.vazio())
+
+  // solução temporária de visibilidade entre 'lista de clientes (tabela)' e 'editar cliente (form)'
+  const [visivel, setVisivel] = useState<'tabela' | 'form'>('tabela')
+
   // gerar massa de dados (lista de clientes conforme props esperadas na classe)
   const clientes = [
     new Cliente('Madalena', 23, '1'),
@@ -18,7 +24,9 @@ export default function Home() {
 
   // identificar o cliente pelo ID no botão Editar
   function clienteSelecionado(cliente: Cliente){
-    console.log(`Selecionar... ${cliente.nome}`)
+    //console.log(`Selecionar... ${cliente.nome}`)
+    setCliente(cliente)
+    setVisivel('form')
   }
 
   // identificar o cliente pelo ID no botão Excluir
@@ -26,13 +34,16 @@ export default function Home() {
     console.log(`Excluir... ${cliente.nome}`)
   }
 
-  // solução temporária de visibilidade entre 'lista de clientes (tabela)' e 'editar cliente (form)'
-  const [visivel, setVisivel] = useState<'tabela' | 'form'>('tabela')
-
-
   // quando o clienteMudou (ter acionado o botão: alterar ou salvar)
   function salvarCliente(cliente: Cliente){
     console.log(cliente)
+    setVisivel('tabela') // após salvar, volta do form para tabela
+  }
+
+  // quando acionar o botão Novo, após JÁ ter cadastrado um cliente
+  function novoCliente(){
+    setCliente(Cliente.vazio())
+    setVisivel('form') // após salvar, volta da tabela form para form
   }
 
   return (
@@ -45,7 +56,7 @@ export default function Home() {
         {visivel === 'tabela' ? (
           <>
             <div className="flex justify-end">
-              <Botao cor="green" className="mb-4" onClick={() => setVisivel('form')}>Novo cliente</Botao>
+              <Botao cor="green" className="mb-4" onClick={novoCliente}>Novo cliente</Botao>
             </div>
             <Tabela 
               clientes={clientes} 
@@ -56,7 +67,7 @@ export default function Home() {
           </>
         ) : (
           <Formulario 
-            cliente={clientes[2]}
+            cliente={cliente}
             clienteMudou={salvarCliente}
             cancelado={() => setVisivel('tabela')}
           >              
