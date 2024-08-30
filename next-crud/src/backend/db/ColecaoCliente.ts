@@ -1,10 +1,64 @@
 import Cliente from "@/core/Cliente";
 import ClienteRepositorio from "@/core/ClienteRepositorio";
-import firebase from "firebase/compat/app";
+import { firestore } from "../config"; 
+import {
+    collection,
+    doc,
+    getDoc,
+    setDoc,
+    addDoc,
+    deleteDoc,
+    getDocs,
+    QueryDocumentSnapshot,
+    SnapshotOptions,
+    FirestoreDataConverter
+} from 'firebase/firestore';
 
 export default class ColecaoCliente implements ClienteRepositorio {
 
-    #conversor = {
+    // Conversor para FirestoreDataConverter para SDK9
+    #conversor: FirestoreDataConverter<Cliente> = {
+        toFirestore(cliente: Cliente) {
+            return {
+                nome: cliente.nome,
+                idade: cliente.idade
+            };
+        },
+        fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Cliente {
+            const dados = snapshot.data(options);
+            return new Cliente(dados.nome, dados.idade, snapshot.id);
+        }
+    };
+
+    async salvar(cliente: Cliente): Promise<Cliente> {
+        if (cliente?.id) {
+            const clienteRef = doc(this.colecao(), cliente.id);
+            await setDoc(clienteRef, cliente);
+            return cliente;
+        } else {
+            const clienteRef = await addDoc(this.colecao(), cliente);
+            const docSnap = await getDoc(clienteRef);
+            return docSnap.data()!;
+        }
+    }
+
+    async excluir(cliente: Cliente): Promise<void> {
+        const clienteRef = doc(this.colecao(), cliente.id);
+        return deleteDoc(clienteRef);
+    }
+
+    async obterTodos(): Promise<Cliente[]> {
+        const querySnapshot = await getDocs(this.colecao());
+        return querySnapshot.docs.map(doc => doc.data()) ?? [];
+    }
+
+    private colecao() {
+        return collection(firestore, 'clientes').withConverter(this.#conversor);
+    }
+
+
+    // versão video com SDK 8
+    /*#conversor = {
         toFirestore(cliente: Cliente) {
             return {
                 nome: cliente.nome,
@@ -38,9 +92,11 @@ export default class ColecaoCliente implements ClienteRepositorio {
         return query.docs.map(doc => doc.data()) ?? []
     }
 
-    private colecao() {
+    /*private colecao() {
         return firebase
             .firestore().collection('clientes')
-            .withConverter(this.#conversor)            
-    }
+            .withConverter(this.#conversor)
+            
+    }*/  
+            
 }

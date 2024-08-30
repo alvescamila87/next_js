@@ -13,7 +13,6 @@ export default class Cliente {
         return new Cliente('', 0)
     }
 
-
     get id() {
         return this.#id
     }
