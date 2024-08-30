@@ -7,13 +7,14 @@ import { IconeEdicao, IconeLixeira } from "./Icons";
  */
 interface TabelaProps {
     clientes: Cliente[],
-    // propriedades opcionais:
+    // funções com propriedades opcionais (?):
     clienteSelecionado?: (cliente: Cliente) => void
     clienteExcluido?: (cliente: Cliente) => void        
 }
 
 export default function Tabela(props: TabelaProps) {
 
+    // exibir botões de ações se NÃO for null
     const exibirAcoes = props.clienteSelecionado || props.clienteExcluido
 
     function renderizarCabecalho() {
@@ -31,6 +32,7 @@ export default function Tabela(props: TabelaProps) {
         // só chama o map, se o cliente estiver nulo
         return props.clientes?.map((cliente, i) => {
             return (
+                // fazer zebrado na lista de clientes
                 <tr 
                     key={cliente.id}
                     className={`${i % 2 === 0 ? 'bg-purple-200' : 'bg-purple-100'}`}
